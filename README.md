@@ -14,8 +14,14 @@ I searched for extensions online and could find only one that barely works and o
 
 ## Implementation
 Background script intercepts all requests for getting job posts' data and then passes that to the content script. After that content script adds detects the language of the post using `languagedetect` and adds it to the beginning of the post title
+
+
 ![image](https://github.com/M1h4n1k/linkedin-language-filter/assets/82715719/3c4b37fd-c376-4c77-97ae-4a993e021dc2)
+
+
 Moreover, you can filter jobs using the language filter at the top
+
+
 ![image](https://github.com/M1h4n1k/linkedin-language-filter/assets/82715719/d7ca252b-e6ac-425c-9689-03164cd885e1)
 
 ## TODO

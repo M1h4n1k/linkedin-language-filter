@@ -3,14 +3,74 @@ import LanguageDetect from "languagedetect";
 const lngDetector = new LanguageDetect();
 lngDetector.setLanguageType("iso3"); // ENG, FIN, etc
 
+const cachedJobs = [];
+const langsSelected = [];
+
+// querySelector shortcut
+const qr = (selector) => document.querySelector(selector);
+
+// Adds language selector to the filters bar
+const buttonAdder = async () => {
+  const data = await fetch(browser.runtime.getURL("./src/langSelector.html"));
+  const selectorHTML = await data.text();
+
+  const hideSelectorOptions = () => {
+    qr("#artdeco-hoverable-artdeco-gen-lang-1").classList.remove(
+      "artdeco-hoverable-content--visible"
+    );
+  };
+
+  qr("ul.search-reusables__filter-list").insertAdjacentHTML(
+    "beforeend",
+    selectorHTML
+  );
+  qr("#lang_cancel").addEventListener("click", hideSelectorOptions);
+  const langButtonRect = qr("#searchFilter_lang").getBoundingClientRect();
+  const containerRect = qr(
+    "#search-reusables__filters-bar"
+  ).getBoundingClientRect();
+  const selector = qr("#artdeco-hoverable-artdeco-gen-lang-1");
+  // center the selector
+  selector.style.left =
+    langButtonRect.left -
+    containerRect.left -
+    selector.getBoundingClientRect().width / 2 +
+    langButtonRect.width / 2 +
+    "px";
+  document.querySelectorAll("input[name='lang-filter-value']").forEach((el) => {
+    el.addEventListener("change", (e) => {
+      const lang = e.target.value;
+      if (langsSelected.includes(lang)) {
+        langsSelected.splice(langsSelected.indexOf(lang), 1);
+      } else {
+        langsSelected.push(lang);
+      }
+    });
+  });
+  qr("#lang_show").addEventListener("click", () => {
+    console.log(langsSelected);
+    console.log(cachedJobs.length);
+    cachedJobs.forEach(processPosting);
+    console.log(cachedJobs.length);
+    hideSelectorOptions();
+  });
+
+  qr("#searchFilter_lang").addEventListener("click", () => {
+    qr("#artdeco-hoverable-artdeco-gen-lang-1").classList.toggle(
+      "artdeco-hoverable-content--visible"
+    );
+  });
+};
+
+// adds language to the job posting title
 const updatePostingLang = (jobLi, lang) => {
   const postingTitle = jobLi.querySelector("a.job-card-list__title");
   if (!postingTitle || postingTitle.innerText === "") return false;
-  if (postingTitle.getAttribute("updated") === "true") return true;
+  if (postingTitle.getAttribute("lang") !== null) return true;
   if (postingTitle) {
     // set attribute to prevent multiple updates
-    postingTitle.setAttribute("updated", "true");
-    postingTitle.innerText = lang + ", " + postingTitle.innerText;
+    postingTitle.setAttribute("lang", lang);
+    postingTitle.innerText = lang + " · " + postingTitle.innerText;
     return true;
   }
   return false;
@@ -28,11 +88,13 @@ let selfDestructingListener = (element, eventType, callback) => {
 };
 
 const processPosting = (posting) => {
+  if (!cachedJobs.includes(posting)) cachedJobs.push(posting);
   const lang = lngDetector.detect(posting.description)[0][0].toUpperCase();
   const postingId = posting.entityUrn.split(":")[3];
-  const jobLi = document.querySelector(
-    `li[data-occludable-job-id="${postingId}"]`
-  );
+  const jobLi = qr(`li[data-occludable-job-id="${postingId}"]`);
+  if (langsSelected.length !== 0 && !langsSelected.includes(lang))
+    jobLi.style.display = "none";
+  else jobLi.style.display = "block";
   if (updatePostingLang(jobLi, lang)) return;
 
   // not all job postings are visible on page load, so this is needed to update them when they appear
@@ -46,8 +108,7 @@ const processPrefetch = (data) => {
     (obj) => obj.$type === "com.linkedin.voyager.dash.jobs.JobPosting"
   );
   postings.forEach((pst) => {
-    // set custom description, cuz it's not consistent between default and prefetch
-    pst.description = pst.description.text;
+    pst.description = pst.description.text; // set custom description, cuz it's not consistent between default and prefetch
     processPosting(pst);
   });
 };
@@ -65,6 +126,6 @@ browser.runtime.onMessage.addListener((data) => {
     default: processDefault,
     prefetch: processPrefetch,
   };
-
+  if (qr("#searchFilter_lang") === null) buttonAdder();
   processors[data.type](data);
 });

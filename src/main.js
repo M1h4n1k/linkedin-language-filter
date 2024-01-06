@@ -58,6 +58,7 @@ const buttonAdder = async () => {
     selector.getBoundingClientRect().width / 2 +
     langButtonRect.width / 2 +
     "px";
+  hideSelectorOptions();
   document.querySelectorAll("input[name='lang-filter-value']").forEach((el) => {
     el.addEventListener("change", (e) => {
       const lang = e.target.value;

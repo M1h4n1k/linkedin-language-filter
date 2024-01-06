@@ -110,7 +110,12 @@ const processPosting = (posting) => {
   const lang = lngDetector.detect(posting.description)[0][0].toUpperCase();
   const postingId = posting.entityUrn.split(":")[3];
   const jobLi = qr(`li[data-occludable-job-id="${postingId}"]`);
-  if (langsSelected.length !== 0 && !langsSelected.includes(lang))
+  if (!jobLi) return;
+  if (
+    lang !== null &&
+    langsSelected.length !== 0 &&
+    !langsSelected.includes(lang)
+  )
     jobLi.style.display = "none";
   else jobLi.style.display = "block";
   if (updatePostingLang(jobLi, lang)) return;

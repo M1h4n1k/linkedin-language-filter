@@ -1,7 +1,4 @@
 // sending message to content script
-const cachedJobs = [];
-const languages = [];
-
 const sendMessage = async (message) => {
   const tabs = await browser.tabs.query({
     active: true,
@@ -13,7 +10,7 @@ const sendMessage = async (message) => {
 const processPrefetch = (data) => {
   for (const obj of data.included) {
     if (obj.$type !== "com.linkedin.voyager.dash.jobs.JobPosting") continue;
-    cachedJobs.push(obj);
+    // ...
   }
   return data;
 };
@@ -33,7 +30,7 @@ const listener = (type) => {
 
     filter.onstop = () => {
       let objs = JSON.parse(str);
-      if (type === "prefetch") objs = processPrefetch(objs);
+      // if (type === "prefetch") objs = processPrefetch(objs);
       filter.write(encoder.encode(JSON.stringify(objs)));
       sendMessage({
         type: type,
@@ -66,12 +63,3 @@ browser.webRequest.onBeforeRequest.addListener(
   },
   ["blocking"]
 );
-
-browser.runtime.onMessage.addListener((data) => {
-  if (type === "new_lang") {
-    languages.push(data.lang);
-  }
-  if (type === "delete_lang") {
-    languages.splice(languages.indexOf(data.lang), 1);
-  }
-});

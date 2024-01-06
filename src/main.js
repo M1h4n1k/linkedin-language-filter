@@ -1,4 +1,5 @@
 import LanguageDetect from "languagedetect";
+import languages from "./languagesISO3.js";
 
 const lngDetector = new LanguageDetect();
 lngDetector.setLanguageType("iso3"); // ENG, FIN, etc
@@ -24,6 +25,26 @@ const buttonAdder = async () => {
     "beforeend",
     selectorHTML
   );
+
+  const ul = qr("#lang-options-container");
+  lngDetector.getLanguages().forEach((lang, ind) => {
+    const langFormatted = lang[0].toUpperCase() + lang.slice(1);
+    ul.insertAdjacentHTML(
+      "beforeend",
+      `
+    <li class="search-reusables__collection-values-item">
+      <input name="lang-filter-value" id="lang-${ind}" class="search-reusables__select-input" type="checkbox" value="${languages[lang]}">
+      <label for="lang-${ind}" class="search-reusables__value-label">
+        <p class="display-flex">
+          <span class="t-14 t-black--light t-normal" aria-hidden="true"> ${langFormatted} </span>
+          <span class="visually-hidden"> Filter by ${langFormatted} </span>
+        </p>
+      </label>
+    </li>
+    `
+    );
+  });
+
   qr("#lang_cancel").addEventListener("click", hideSelectorOptions);
   const langButtonRect = qr("#searchFilter_lang").getBoundingClientRect();
   const containerRect = qr(
@@ -48,10 +69,7 @@ const buttonAdder = async () => {
     });
   });
   qr("#lang_show").addEventListener("click", () => {
-    console.log(langsSelected);
-    console.log(cachedJobs.length);
     cachedJobs.forEach(processPosting);
-    console.log(cachedJobs.length);
     hideSelectorOptions();
   });
 

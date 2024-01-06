@@ -1,0 +1,23 @@
+{
+    "manifest_version": 2,
+    "name": "LinkedIn jobs filter",
+    "version": "1.0",
+  
+    "description": "Adds an option to filter jobs based on the language of the description",
+  
+    "icons": {
+      "48": "icons/icon.png"
+    },
+  
+    "content_scripts": [
+      {
+        "matches": ["*://*.linkedin.com/*"],
+        "js": ["./dist/main.js"]
+      }
+    ],
+    "background": {
+      "scripts": ["./src/background.js"]
+    },
+    "permissions": ["webRequest", "webRequestBlocking", "*://*.linkedin.com/*"]
+  }
+  

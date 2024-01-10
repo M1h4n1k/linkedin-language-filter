@@ -5,7 +5,10 @@
 While searching for jobs on LinkedIn there are a lot of jobs with descriptions in languages that I don't know. So I would like to hide those jobs, however LinkedIn doesn't provide such option. 
 I searched for extensions online and could find only one that barely works and only for chrome, but I want it for firefox as I use it as my main browser. That's why I decided to write it
 
-## How to use
+## How to install? 
+Just install [the add-on from firefox add-ons store](https://addons.mozilla.org/en-US/firefox/addon/linkedin-jobs-language-filter) and start using it on [the jobs page](https://www.linkedin.com/jobs/search)
+
+## How to build from source
 1. Clone the repository `git clone https://github.com/M1h4n1k/linkedin-language-filter.git`
 2. Install the dependecies `npm install`
 3. Build the project `npx webpack --mode production`

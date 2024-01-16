@@ -9,9 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@huggingface/agents": "^0.0.5",
-    "@huggingface/hub": "^0.12.3",
-    "@huggingface/inference": "^2.6.4",
     "languagedetect": "^2.0.0"
   },
   "devDependencies": {

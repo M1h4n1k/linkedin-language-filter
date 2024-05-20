@@ -67,6 +67,17 @@ const buttonAdder = async () => {
       } else {
         langsSelected.push(lang);
       }
+      if (langsSelected.length > 0) {
+        qr("#langsCount").innerText = langsSelected.length;
+        const langSelector = qr("#searchFilter_lang");
+        if (!langSelector.classList.contains("artdeco-pill--selected")) {
+          langSelector.classList.add("artdeco-pill--selected");
+        }
+        qr("#langsCount").style.display = "inline-flex";
+      } else {
+        qr("#langsCount").style.display = "none";
+        qr("#searchFilter_lang").classList.remove("artdeco-pill--selected");
+      }
     });
   });
   qr("#lang_show").addEventListener("click", () => {

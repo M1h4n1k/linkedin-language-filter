@@ -89,7 +89,8 @@ const updatePostingLang = (jobLi, lang) => {
   if (postingTitle) {
     // set attribute to prevent multiple updates
     postingTitle.setAttribute("lang", lang);
-    postingTitle.innerText = lang + " · " + postingTitle.innerText;
+    postingTitle.innerText =
+      lang + " · " + postingTitle.innerText.split("\n")[0];
     return true;
   }
   return false;

@@ -4,7 +4,7 @@ import languages from "./languagesISO3.js";
 const lngDetector = new LanguageDetect();
 lngDetector.setLanguageType("iso3"); // ENG, FIN, etc
 
-const cachedJobs = [];
+const cachedJobDescriptions = [];
 const langsSelected = [];
 
 // querySelector shortcut
@@ -81,7 +81,7 @@ const buttonAdder = async () => {
     });
   });
   qr("#lang_show").addEventListener("click", () => {
-    cachedJobs.forEach(processPosting);
+    cachedJobDescriptions.forEach(processPosting);
     hideSelectorOptions();
   });
 
@@ -119,7 +119,8 @@ let selfDestructingListener = (element, eventType, callback) => {
 };
 
 const processPosting = (posting) => {
-  if (!cachedJobs.includes(posting)) cachedJobs.push(posting);
+  if (!cachedJobDescriptions.includes(posting))
+    cachedJobDescriptions.push(posting);
   const lang = lngDetector.detect(posting.description)[0][0].toUpperCase();
   const postingId = posting.entityUrn.split(":")[3];
   const jobLi = qr(`li[data-occludable-job-id="${postingId}"]`);
@@ -155,6 +156,26 @@ const processDefault = (data) => {
   posting.description = posting.descriptionText.text;
   processPosting(posting);
 };
+
+/*
+ * Taken & modified from https://stackoverflow.com/a/46428962
+ * When page or filters are changed the changes are pushed to the url, so we can observe those changes and update the postings
+ */
+const observeUrlChange = () => {
+  let oldHref = document.location.href;
+  const body = document.querySelector("body");
+  const observer = new MutationObserver((mutations) => {
+    if (oldHref !== document.location.href) {
+      oldHref = document.location.href;
+      cachedJobDescriptions.map((posting) => {
+        processPosting(posting);
+      });
+    }
+  });
+  observer.observe(body, { childList: true, subtree: true });
+};
+
+observeUrlChange();
 
 // listen for messages from background script
 browser.runtime.onMessage.addListener((data) => {

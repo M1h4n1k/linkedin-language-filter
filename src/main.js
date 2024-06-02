@@ -67,6 +67,9 @@ const buttonAdder = async () => {
       } else {
         langsSelected.push(lang);
       }
+      // Save the updated language selections to localStorage
+      localStorage.setItem("selectedLanguages", JSON.stringify(langsSelected));
+
       if (langsSelected.length > 0) {
         qr("#langsCount").innerText = langsSelected.length;
         const langSelector = qr("#searchFilter_lang");
@@ -90,6 +93,30 @@ const buttonAdder = async () => {
       "artdeco-hoverable-content--visible"
     );
   });
+};
+
+// loads saved languages from localstorage if there are any
+const loadLanguageSelections = () => {
+  const savedLanguages = localStorage.getItem("selectedLanguages");
+  if (savedLanguages) {
+    langsSelected.push(...JSON.parse(savedLanguages));
+    langsSelected.forEach((lang) => {
+      const inputElement = qr(`input[value="${lang}"]`);
+      if (inputElement) {
+        inputElement.checked = true;
+      }
+    });
+
+    // Update UI to reflect loaded languages
+    if (langsSelected.length > 0) {
+      qr("#langsCount").innerText = langsSelected.length;
+      const langSelector = qr("#searchFilter_lang");
+      if (!langSelector.classList.contains("artdeco-pill--selected")) {
+        langSelector.classList.add("artdeco-pill--selected");
+      }
+      qr("#langsCount").style.display = "inline-flex";
+    }
+  }
 };
 
 // adds language to the job posting title
@@ -183,6 +210,8 @@ browser.runtime.onMessage.addListener((data) => {
     default: processDefault,
     prefetch: processPrefetch,
   };
-  if (qr("#searchFilter_lang") === null) buttonAdder();
+  if (qr("#searchFilter_lang") === null) {
+    buttonAdder().then(loadLanguageSelections);
+  }
   processors[data.type](data);
 });

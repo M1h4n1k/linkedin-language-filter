@@ -1,10 +1,14 @@
 // sending message to content script
-const sendMessage = async (message) => {
+const sendMessage = async (message, tabId) => {
   const tabs = await browser.tabs.query({
-    active: true,
-    currentWindow: true,
+    url: "*://*.linkedin.com/*",
   });
-  browser.tabs.sendMessage(tabs[0].id, message);
+  for (const tab of tabs) {
+    if (tab.id === tabId) {
+      browser.tabs.sendMessage(tab.id, message);
+      return;
+    }
+  }
 };
 
 const processPrefetch = (data) => {
@@ -32,10 +36,13 @@ const listener = (type) => {
       let objs = JSON.parse(str);
       // if (type === "prefetch") objs = processPrefetch(objs);
       filter.write(encoder.encode(JSON.stringify(objs)));
-      sendMessage({
-        type: type,
-        obj: objs,
-      });
+      sendMessage(
+        {
+          type: type,
+          obj: objs,
+        },
+        requestDetails.tabId
+      );
 
       filter.disconnect();
     };

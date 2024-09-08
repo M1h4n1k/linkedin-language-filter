@@ -1,14 +1,6 @@
 // sending message to content script
 const sendMessage = async (message, tabId) => {
-  const tabs = await browser.tabs.query({
-    url: "*://*.linkedin.com/*",
-  });
-  for (const tab of tabs) {
-    if (tab.id === tabId) {
-      browser.tabs.sendMessage(tab.id, message);
-      return;
-    }
-  }
+  await browser.tabs.sendMessage(tabId, message);
 };
 
 const processPrefetch = (data) => {

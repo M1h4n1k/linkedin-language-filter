@@ -18,8 +18,8 @@ jobs:
         with:
           node-version: "16"
 
-      - name: Install dependencies for Vue.js app
-        run: npm install --save-dev --save-exact prettier
+      - name: Install prettier
+        run: npm install prettier@3.0.0
 
       - name: Check linting
         run: npx prettier ./src --check

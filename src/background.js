@@ -14,7 +14,7 @@ const processPrefetch = (data) => {
 const listener = (type) => {
   return (requestDetails) => {
     let filter = browser.webRequest.filterResponseData(
-      requestDetails.requestId,
+      requestDetails.requestId
     );
     let decoder = new TextDecoder("utf-8");
     let encoder = new TextEncoder();
@@ -33,7 +33,7 @@ const listener = (type) => {
           type: type,
           obj: objs,
         },
-        requestDetails.tabId,
+        requestDetails.tabId
       );
 
       filter.disconnect();
@@ -50,7 +50,7 @@ browser.webRequest.onBeforeRequest.addListener(
       "https://www.linkedin.com/voyager/api/graphql?*JOB_DESCRIPTION_CARD*",
     ],
   },
-  ["blocking"],
+  ["blocking"]
 );
 
 browser.webRequest.onBeforeRequest.addListener(
@@ -60,5 +60,5 @@ browser.webRequest.onBeforeRequest.addListener(
       "https://www.linkedin.com/voyager/api/graphql?*jobCardPrefetchQuery*",
     ],
   },
-  ["blocking"],
+  ["blocking"]
 );

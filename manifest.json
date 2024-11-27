@@ -1,24 +1,22 @@
 {
-    "manifest_version": 3,
-    "name": "LinkedIn jobs filter",
-    "version": "1.3.1",
-  
-    "description": "Adds an option to filter jobs based on the language of the description",
-  
-    "icons": {
-      "48": "icons/icon48.png"
-    },
-  
-    "content_scripts": [
-      {
-        "matches": ["*://*.linkedin.com/*"],
-        "js": ["./dist/main.js"]
-      }
-    ],
-    "background": {
-      "scripts": ["./src/background.js"]
-    },
-    "permissions": ["webRequest", "webRequestBlocking", "webRequestFilterResponse"],
-    "host_permissions": ["*://*.linkedin.com/*"]
-  }
-  
+  "manifest_version": 2,
+  "name": "LinkedIn jobs filter",
+  "version": "1.3.1",
+
+  "description": "Adds an option to filter jobs based on the language of the description",
+
+  "icons": {
+    "48": "icons/icon48.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://*.linkedin.com/*"],
+      "js": ["./dist/main.js"]
+    }
+  ],
+  "background": {
+    "scripts": ["./src/background.js"]
+  },
+  "permissions": ["webRequest", "webRequestBlocking", "*://*.linkedin.com/*"]
+}

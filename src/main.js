@@ -17,13 +17,13 @@ const buttonAdder = async () => {
 
   const hideSelectorOptions = () => {
     qr("#artdeco-hoverable-artdeco-gen-lang-1").classList.remove(
-      "artdeco-hoverable-content--visible"
+      "artdeco-hoverable-content--visible",
     );
   };
 
   qr("ul.search-reusables__filter-list").insertAdjacentHTML(
     "beforeend",
-    selectorHTML
+    selectorHTML,
   );
 
   const ul = qr("#lang-options-container");
@@ -41,14 +41,14 @@ const buttonAdder = async () => {
         </p>
       </label>
     </li>
-    `
+    `,
     );
   });
 
   qr("#lang_cancel").addEventListener("click", hideSelectorOptions);
   const langButtonRect = qr("#searchFilter_lang").getBoundingClientRect();
   const containerRect = qr(
-    "#search-reusables__filters-bar"
+    "#search-reusables__filters-bar",
   ).getBoundingClientRect();
   const selector = qr("#artdeco-hoverable-artdeco-gen-lang-1");
   // center the selector
@@ -87,7 +87,7 @@ const buttonAdder = async () => {
 
   qr("#searchFilter_lang").addEventListener("click", () => {
     qr("#artdeco-hoverable-artdeco-gen-lang-1").classList.toggle(
-      "artdeco-hoverable-content--visible"
+      "artdeco-hoverable-content--visible",
     );
   });
 };
@@ -136,13 +136,13 @@ const processPosting = (posting) => {
 
   // not all job postings are visible on page load, so this is needed to update them when they appear
   selfDestructingListener(jobLi, "DOMSubtreeModified", () =>
-    updatePostingLang(jobLi, lang)
+    updatePostingLang(jobLi, lang),
   );
 };
 
 const processPrefetch = (data) => {
   const postings = data.obj.included.filter(
-    (obj) => obj.$type === "com.linkedin.voyager.dash.jobs.JobPosting"
+    (obj) => obj.$type === "com.linkedin.voyager.dash.jobs.JobPosting",
   );
   postings.forEach((pst) => {
     pst.description = pst.description.text; // set custom description, cuz it's not consistent between default and prefetch
